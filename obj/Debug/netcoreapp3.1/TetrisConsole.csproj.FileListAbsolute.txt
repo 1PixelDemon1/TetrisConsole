@@ -1,0 +1,13 @@
+C:\Users\winpx\source\repos\TetrisConsole\bin\Debug\netcoreapp3.1\TetrisConsole.exe
+C:\Users\winpx\source\repos\TetrisConsole\bin\Debug\netcoreapp3.1\TetrisConsole.deps.json
+C:\Users\winpx\source\repos\TetrisConsole\bin\Debug\netcoreapp3.1\TetrisConsole.runtimeconfig.json
+C:\Users\winpx\source\repos\TetrisConsole\bin\Debug\netcoreapp3.1\TetrisConsole.runtimeconfig.dev.json
+C:\Users\winpx\source\repos\TetrisConsole\bin\Debug\netcoreapp3.1\TetrisConsole.dll
+C:\Users\winpx\source\repos\TetrisConsole\bin\Debug\netcoreapp3.1\TetrisConsole.pdb
+C:\Users\winpx\source\repos\TetrisConsole\obj\Debug\netcoreapp3.1\TetrisConsole.csprojAssemblyReference.cache
+C:\Users\winpx\source\repos\TetrisConsole\obj\Debug\netcoreapp3.1\TetrisConsole.AssemblyInfoInputs.cache
+C:\Users\winpx\source\repos\TetrisConsole\obj\Debug\netcoreapp3.1\TetrisConsole.AssemblyInfo.cs
+C:\Users\winpx\source\repos\TetrisConsole\obj\Debug\netcoreapp3.1\TetrisConsole.csproj.CoreCompileInputs.cache
+C:\Users\winpx\source\repos\TetrisConsole\obj\Debug\netcoreapp3.1\TetrisConsole.dll
+C:\Users\winpx\source\repos\TetrisConsole\obj\Debug\netcoreapp3.1\TetrisConsole.pdb
+C:\Users\winpx\source\repos\TetrisConsole\obj\Debug\netcoreapp3.1\TetrisConsole.genruntimeconfig.cache
