@@ -46,7 +46,7 @@ namespace TetrisConsole
         }
 
         public void Rotate()
-        {
+        {            
             switch (rotationState)
             {
                 case 0:

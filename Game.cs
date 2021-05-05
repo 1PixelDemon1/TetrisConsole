@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Threading;
 
 namespace TetrisConsole
@@ -14,18 +12,20 @@ namespace TetrisConsole
         public static int Score = 0;
         public static void Main()
         {
-            window = new Window();                
-            ConsoleColor newForeColor = ConsoleColor.Blue;          
-            Console.ForegroundColor = newForeColor;
+            //window = new Window(Width, Height);
+            window = new Window();
+            Console.ForegroundColor = ConsoleColor.Green;            
             GameIteration();
         }
 
 
         public static string GetKey()         
         {
+            // Returns the currently pressed key.
             string k = " ";
             while (Console.KeyAvailable)
             {
+                // This loop clears the input stack.
                 k = Console.ReadKey(true).Key.ToString();
             }
             return k;            
@@ -33,6 +33,7 @@ namespace TetrisConsole
 
         public static void checkLines() 
         {
+            // Scans horizontal lines and deletes them from window template if they are filled.
             for (var line = 0; line < window.Height - 2; line++) 
             {
                 bool flag = true;
@@ -54,9 +55,11 @@ namespace TetrisConsole
         }
 
         public static void GameIteration() 
-        {            
-            ITetramino tet = new TTetra(new int[] { window.Width/2, 0 });
-            ITetramino nextTet = new STetra(new int[] { window.Width / 2, 0 });
+        {        
+            // Main game loop.
+
+            ITetramino tet = new TTetra(new int[] { (window.Width / 2) - 1, 0 });
+            ITetramino nextTet = new STetra(new int[] { (window.Width / 2) - 1, 0 });
             string nextTetStr = "#";
             
             while (!Game.Over)
@@ -81,24 +84,29 @@ namespace TetrisConsole
                 }
                 
                 tet.Step("DOWN");
+
+                // Following section checks if the tetramino has collided the bottom/another tetramino.
                 if (!tet.isActive) 
                 {
                     Game.Speed += 5;
-                    window.AddFrozen(tet.coords, tet.signs);
                     Game.Score += 50;
+
+                    // Adding the fallen tetramino to window template.
+                    window.AddFrozen(tet.coords, tet.signs);
+                    
                     tet = nextTet;
                     switch (new Random().Next(0, 3)) 
                     {
                         case 0:
-                            nextTet = new LITetra(new int[] { window.Width / 2, 0 });
+                            nextTet = new LITetra(new int[] { (window.Width / 2) - 1, 0 });
                             nextTetStr = "|";
                             break;
                         case 1:
-                            nextTet = new TTetra(new int[] { window.Width / 2, 0 });
+                            nextTet = new TTetra(new int[] { (window.Width / 2) - 1, 0 });
                             nextTetStr = "T";
                             break;
                         case 2:
-                            nextTet = new STetra(new int[] { window.Width / 2, 0 });
+                            nextTet = new STetra(new int[] { (window.Width / 2) - 1, 0 });
                             nextTetStr = "#";
                             break;
                         default:
