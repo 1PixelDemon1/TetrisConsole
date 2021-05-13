@@ -58,10 +58,12 @@ namespace TetrisConsole
         {        
             // Main game loop.
 
-            ITetramino tet = new TTetra(new int[] { (window.Width / 2) - 1, 0 });
+            ITetramino tet = new LLTetra(new int[] { (window.Width / 2) - 1, 0 });
             ITetramino nextTet = new STetra(new int[] { (window.Width / 2) - 1, 0 });
             string nextTetStr = "#";
-            
+
+            bool isDown = false;
+
             while (!Game.Over)
             {
                 window.ClearWindow();
@@ -82,8 +84,17 @@ namespace TetrisConsole
                 {
                     tet.Step("LEFT");
                 }
-                
-                tet.Step("DOWN");
+
+                if (key == "S")
+                {
+                    isDown = true;
+                }
+
+                if (isDown) 
+                {
+                    tet.Step("DOWN");
+                }
+                isDown = !isDown;
 
                 // Following section checks if the tetramino has collided the bottom/another tetramino.
                 if (!tet.isActive) 
@@ -95,7 +106,7 @@ namespace TetrisConsole
                     window.AddFrozen(tet.coords, tet.signs);
                     
                     tet = nextTet;
-                    switch (new Random().Next(0, 3)) 
+                    switch (new Random().Next(0, 5)) 
                     {
                         case 0:
                             nextTet = new LITetra(new int[] { (window.Width / 2) - 1, 0 });
@@ -108,6 +119,14 @@ namespace TetrisConsole
                         case 2:
                             nextTet = new STetra(new int[] { (window.Width / 2) - 1, 0 });
                             nextTetStr = "#";
+                            break;
+                        case 3:
+                            nextTet = new RLTetra(new int[] { (window.Width / 2) - 1, 0 });
+                            nextTetStr = "L";
+                            break;
+                        case 4:
+                            nextTet = new LLTetra(new int[] { (window.Width / 2) - 1, 0 });
+                            nextTetStr = "¬";
                             break;
                         default:
                             break;
@@ -122,9 +141,10 @@ namespace TetrisConsole
                 Console.WriteLine($"Players`s score is: {Score} points");
                 Console.WriteLine($"Next Tet is: {nextTetStr}");
                 
-                Thread.Sleep(10000/Game.Speed);                        
-                
-                if (key == "Escape") 
+                Thread.Sleep(10000/Game.Speed);
+
+                // If the top level line is filled with tetraminos.
+                if (key == "Escape" || window.GetFrozenLine(0).Contains("@"))
                 {
                     Game.Over = true;
                 }
