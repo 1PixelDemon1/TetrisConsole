@@ -7,9 +7,11 @@ namespace TetrisConsole
     class Game
     {
         public static bool Over = false;
+        public static bool Paused = false;
         public static int Speed = 100;
         public static Window window;
         public static int Score = 0;
+        
         public static void Main()
         {
             //window = new Window(Width, Height);
@@ -55,8 +57,10 @@ namespace TetrisConsole
         }
 
         public static void GameIteration() 
-        {        
+        {
             // Main game loop.
+
+            PauseMenu pauseMenu = new PauseMenu();            
 
             ITetramino tet = new LLTetra(new int[] { (window.Width / 2) - 1, 0 });
             ITetramino nextTet = new STetra(new int[] { (window.Width / 2) - 1, 0 });
@@ -68,74 +72,98 @@ namespace TetrisConsole
             {
                 window.ClearWindow();
                 
-                string key = Game.GetKey();                 
+                string key = Game.GetKey();
 
-                if (key == "Spacebar")
+                if (!Game.Paused)
                 {
-                    tet.Rotate();
+                    if (key == "Spacebar")
+                    {
+                        tet.Rotate();
+                    }
+
+                    if (key == "D")
+                    {
+                        tet.Step("RIGHT");
+                    }
+
+                    if (key == "A")
+                    {
+                        tet.Step("LEFT");
+                    }
+
+                    if (key == "S")
+                    {
+                        isDown = true;
+                    }
+
+                    if (isDown)
+                    {
+                        tet.Step("DOWN");
+                    }
+                    isDown = !isDown;
+
+                    // Following section checks if the tetramino has collided the bottom/another tetramino.
+                    if (!tet.isActive)
+                    {
+                        Game.Speed += 5;
+                        Game.Score += 50;
+
+                        // Adding the fallen tetramino to window template.
+                        window.AddFrozen(tet.coords, tet.signs);
+
+                        tet = nextTet;
+                        switch (new Random().Next(0, 5))
+                        {
+                            case 0:
+                                nextTet = new LITetra(new int[] { (window.Width / 2) - 1, 0 });
+                                nextTetStr = "|";
+                                break;
+                            case 1:
+                                nextTet = new TTetra(new int[] { (window.Width / 2) - 1, 0 });
+                                nextTetStr = "T";
+                                break;
+                            case 2:
+                                nextTet = new STetra(new int[] { (window.Width / 2) - 1, 0 });
+                                nextTetStr = "#";
+                                break;
+                            case 3:
+                                nextTet = new RLTetra(new int[] { (window.Width / 2) - 1, 0 });
+                                nextTetStr = "L";
+                                break;
+                            case 4:
+                                nextTet = new LLTetra(new int[] { (window.Width / 2) - 1, 0 });
+                                nextTetStr = "¬";
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    tet.Display();
+                    Game.checkLines();
                 }
-
-                if (key == "D") 
+                else 
                 {
-                    tet.Step("RIGHT");
+                    if (key == "S") pauseMenu.ChangeTab(PauseMenu.MenuTabs.Exit);
+                    if (key == "W") pauseMenu.ChangeTab(PauseMenu.MenuTabs.Continue);
+                    if (key == "Enter") 
+                    {
+                        switch (pauseMenu.menuState) 
+                        {
+                            case PauseMenu.MenuTabs.Continue:
+                                Game.Paused = false;
+                                break;
+                            case PauseMenu.MenuTabs.Exit:
+                                Game.Over = true;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    pauseMenu.Display();
                 }
                 
-                if (key == "A")
-                {
-                    tet.Step("LEFT");
-                }
-
-                if (key == "S")
-                {
-                    isDown = true;
-                }
-
-                if (isDown) 
-                {
-                    tet.Step("DOWN");
-                }
-                isDown = !isDown;
-
-                // Following section checks if the tetramino has collided the bottom/another tetramino.
-                if (!tet.isActive) 
-                {
-                    Game.Speed += 5;
-                    Game.Score += 50;
-
-                    // Adding the fallen tetramino to window template.
-                    window.AddFrozen(tet.coords, tet.signs);
-                    
-                    tet = nextTet;
-                    switch (new Random().Next(0, 5)) 
-                    {
-                        case 0:
-                            nextTet = new LITetra(new int[] { (window.Width / 2) - 1, 0 });
-                            nextTetStr = "|";
-                            break;
-                        case 1:
-                            nextTet = new TTetra(new int[] { (window.Width / 2) - 1, 0 });
-                            nextTetStr = "T";
-                            break;
-                        case 2:
-                            nextTet = new STetra(new int[] { (window.Width / 2) - 1, 0 });
-                            nextTetStr = "#";
-                            break;
-                        case 3:
-                            nextTet = new RLTetra(new int[] { (window.Width / 2) - 1, 0 });
-                            nextTetStr = "L";
-                            break;
-                        case 4:
-                            nextTet = new LLTetra(new int[] { (window.Width / 2) - 1, 0 });
-                            nextTetStr = "¬";
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-
-                tet.Display();
-                Game.checkLines();
+                
                 window.Display();
 
                 Console.WriteLine($"Players`s score is: {Score} points");
@@ -143,12 +171,19 @@ namespace TetrisConsole
                 
                 Thread.Sleep(10000/Game.Speed);
 
+                if (key == "Escape")
+                {
+                    Game.Paused = true;
+                }
+
                 // If the top level line is filled with tetraminos.
-                if (key == "Escape" || window.GetFrozenLine(0).Contains("@"))
+                if (window.GetFrozenLine(0).Contains("@"))
                 {
                     Game.Over = true;
-                }
-            }            
+                }                                
+            }
+            Console.WriteLine("GAME OVER!\nENTER ANY KEY TO EXIT...\n");
+            Console.ReadLine();
         }
     }
 }

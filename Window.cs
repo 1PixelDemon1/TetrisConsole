@@ -44,7 +44,7 @@ namespace TetrisConsole
 
         public Window(int Width, int Height)
         {
-            if (Width < 6 || Height < 6) 
+            if (Width < 12 || Height < 12) 
             {
                 GameField = Field.ToString();
                 Width = 12;
